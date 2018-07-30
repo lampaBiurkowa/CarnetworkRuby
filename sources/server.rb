@@ -24,9 +24,13 @@ module CarnetworkRuby
 
         def handleNewClients
             while @connected do
-                @client.push(@server.accept)
-                puts @clients.length
+                @clients.push(@server.accept)
+                sendGreetMessage
             end
+        end
+
+        def sendGreetMessage
+            @clients[-1].puts("CLID: #{@clients.length - 1}")
         end
 
     end

@@ -6,13 +6,15 @@ module CarnetworkRuby
         @messagesToSend = nil
         @client = nil
         @connected = nil
+        @id = nil
         @sendingThread = nil
 
         def initialize(server, port)
             @messagesToSend = Array.new
             @client = TCPSocket.new(server, port)
             @connected = true
-            @sendingThread = Thread.new { handleSend } 
+            @sendingThread = Thread.new { handleSend }
+            handleId
         end
 
         def receive
@@ -31,6 +33,11 @@ module CarnetworkRuby
                     sleep(timeout)
                 end
             end
+        end
+
+        def handleId
+            data = @client.gets
+            @id = data["CLID: ".length .. -1]
         end
 
         def disconnect
