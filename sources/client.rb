@@ -24,7 +24,7 @@ module CarnetworkRuby
         end
 
         def handleSend(timeout = 1)
-            while @connected
+            while @connected do
                 if @messagesToSend > 0
                     send(@messagesToSend[0])
                     @messagesToSend = @messagesToSend.pop(@messagesToSend.length - 2)
