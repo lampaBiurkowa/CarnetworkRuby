@@ -1,6 +1,6 @@
 require 'socket'
 
-module CarserverRuby
+module CarnetworkRuby
     class Client
 
         @messagesToSend = nil
@@ -8,9 +8,9 @@ module CarserverRuby
         @connected = nil
         @sendingThread = nil
 
-        def initialize
+        def initialize(server, port)
             @messagesToSend = Array.new
-            @client = TCPSocket.new('', )
+            @client = TCPSocket.new(server, port)
             @connected = true
             @sendingThread = Thread.new { handleSend } 
         end
@@ -37,6 +37,8 @@ module CarserverRuby
             @connected = false
             @client.close
         end
+
+        attr_reader :messagesToSend
 
     end
 end
