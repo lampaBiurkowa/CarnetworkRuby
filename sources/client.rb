@@ -28,7 +28,7 @@ module CarnetworkRuby
         def handleSend(timeout = 0.5)
             while @connected do
                 if @messagesToSend.length > 0
-                    @client.puts("#{@messagesToSend[0]} CLID: #{@id}")
+                    @client.puts("CLID: #{@id} #{@messagesToSend[0]}")
                     @messagesToSend = @messagesToSend.pop(@messagesToSend.length - 1)
                     sleep(timeout)
                 end

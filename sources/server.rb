@@ -1,11 +1,14 @@
-require 'socket'
+require "ostruct"
+require "socket"
 
 module CarnetworkRuby
     class Server
 
         @clients = nil
         @connected = nil
+        MessageData = Struct.new(:id, :content)
         @newClientsThread = nil
+        @lastMessage = nil
         @server = nil
 
         def initialize(server, port)
@@ -19,9 +22,18 @@ module CarnetworkRuby
         def update
             while @connected do
                 @clients.each do |client|
-                    puts client.gets
+                    handleReceivedMessage(client.gets)
                 end
             end
+        end
+
+        def handleReceivedMessage(message)
+            message = message["CLID: ".length .. -1] #123 sddsada
+            id = message[0 .. message.index(" ") - 1]
+            content = message[message.index(" ") + 1 .. -1]
+            @lastMessage = MessageData.new(id, content)
+            puts @lastMessage.id
+            puts @lastMessage.content
         end
 
         def handleNewClients
