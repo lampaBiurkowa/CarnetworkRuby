@@ -28,6 +28,9 @@ module CarnetworkRuby
         end
 
         def handleReceivedMessage(message)
+            puts "a #{message}"
+            message = decode(message, 2)
+            puts "b #{message}"
             message = message["CLID: ".length .. -2]
             begin
                 id = message[0 .. message.index(" ") - 1]
@@ -37,6 +40,22 @@ module CarnetworkRuby
                 content = nil
             end
             @lastMessage = MessageData.new(id, content)
+        end
+
+        def decode(data, coder)
+            if coder < 0 || coder >= 128
+                puts "Coder must be between 0 and 127, decoding disabled"
+                coder = 0
+            end
+            for i in 0..data.length - 1
+                asciiNo = data[i].ord
+                asciiNo -= coder
+                if asciiNo < 0
+                    asciiNo += 128;
+                end
+                data[i] = asciiNo.chr
+            end
+            return data
         end
 
         def handleNewClients

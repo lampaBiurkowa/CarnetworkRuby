@@ -28,11 +28,28 @@ module CarnetworkRuby
         def handleSend(timeout = 0.5)
             while @connected do
                 if @messagesToSend.length > 0
-                    @client.puts("CLID: #{@id} #{@messagesToSend[0]}")
+                    messageToSend = encode("CLID: #{@id} #{@messagesToSend[0]}", 2)
+                    @client.puts(messageToSend)
                     @messagesToSend = @messagesToSend.pop(@messagesToSend.length - 1)
                     sleep(timeout)
                 end
             end
+        end
+
+        def encode(data, coder)
+            if coder < 0 || coder >= 128
+                puts "Coder must be between 0 and 127, encoding disabled"
+                coder = 0
+            end
+            for i in 0..data.length - 1
+                asciiNo = data[i].ord
+                asciiNo += coder
+                if asciiNo >= 128
+                    asciiNo -= 128;
+                end
+                data[i] = asciiNo.chr
+            end
+            return data
         end
 
         def handleId
