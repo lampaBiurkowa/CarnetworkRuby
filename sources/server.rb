@@ -18,7 +18,9 @@ module CarnetworkRuby
 
         def update
             while @connected do
-
+                @clients.each do |client|
+                    puts client.gets
+                end
             end
         end
 
@@ -31,6 +33,10 @@ module CarnetworkRuby
 
         def sendGreetMessage
             @clients[-1].puts("CLID: #{@clients.length - 1}")
+        end
+
+        def receive
+            return @server.gets
         end
 
     end
