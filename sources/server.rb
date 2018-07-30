@@ -7,6 +7,7 @@ module CarnetworkRuby
         MessageData = Struct.new(:id, :content)
 
         @clients = nil
+        @coder = nil
         @connected = nil
         @lastMessage = nil
         @server = nil
@@ -15,9 +16,10 @@ module CarnetworkRuby
         @newClientsThread = nil
         @receiveThread = nil
 
-        def initialize(server, port)
+        def initialize(server, port, coder = 2)
             @clients = Array.new
             @clientReceivingThreads = Array.new
+            @coder = coder
             @server = TCPServer.new(server, port)
             @connected = true
             @newClientsThread = Thread.new { handleNewClients }
@@ -26,21 +28,21 @@ module CarnetworkRuby
         def handleReceivingFromClient(id)
             while @connected do
                 message = @clients[id].gets
-                content = decode(message, 2)
+                content = decode(message)
                 @lastMessage = MessageData.new(id, content)
                 puts @lastMessage.id
                 puts @lastMessage.content
             end
         end
 
-        def decode(data, coder)
-            if coder < 0 || coder >= 128
+        def decode(data)
+            if @coder < 0 || @coder >= 128
                 puts "Coder must be between 0 and 127, pseudodecoding disabled"
-                coder = 0
+                @coder = 0
             end
             for i in 0..data.length - 1
                 asciiNo = data[i].ord
-                asciiNo -= coder
+                asciiNo -= @coder
                 if asciiNo < 0
                     asciiNo += 128;
                 end
