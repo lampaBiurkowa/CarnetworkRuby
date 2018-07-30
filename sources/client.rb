@@ -37,8 +37,7 @@ module CarnetworkRuby
 
         def handleId
             data = @client.gets
-            @id = data["CLID: ".length .. -1]
-            puts @id
+            @id = data["CLID: ".length .. -2]
         end
 
         def disconnect

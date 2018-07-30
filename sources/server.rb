@@ -28,12 +28,15 @@ module CarnetworkRuby
         end
 
         def handleReceivedMessage(message)
-            message = message["CLID: ".length .. -1] #123 sddsada
-            id = message[0 .. message.index(" ") - 1]
-            content = message[message.index(" ") + 1 .. -1]
+            message = message["CLID: ".length .. -2]
+            begin
+                id = message[0 .. message.index(" ") - 1]
+                content = message[message.index(" ") + 1 .. -1]
+            rescue
+                id = nil
+                content = nil
+            end
             @lastMessage = MessageData.new(id, content)
-            puts @lastMessage.id
-            puts @lastMessage.content
         end
 
         def handleNewClients
