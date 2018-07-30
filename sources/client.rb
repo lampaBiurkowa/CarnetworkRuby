@@ -29,7 +29,6 @@ module CarnetworkRuby
             while @connected do
                 if @messagesToSend.length > 0
                     messageToSend = encode(messagesToSend[0], 2)
-                    puts messageToSend
                     @client.puts(messageToSend)
                     @messagesToSend = @messagesToSend.pop(@messagesToSend.length - 1)
                     sleep(timeout)

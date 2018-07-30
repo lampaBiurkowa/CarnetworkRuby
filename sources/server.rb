@@ -21,13 +21,6 @@ module CarnetworkRuby
             @server = TCPServer.new(server, port)
             @connected = true
             @newClientsThread = Thread.new { handleNewClients }
-            #@receiveThread = Thread.new { handleReceiving }
-            update
-        end
-
-        def update
-            while @connected do
-            end
         end
 
         def handleReceivingFromClient(id)
@@ -60,7 +53,6 @@ module CarnetworkRuby
             while @connected do
                 @clients.push(@server.accept)
                 sendGreetMessage
-                puts "ddasd"
                 @clientReceivingThreads.push(Thread.new { handleReceivingFromClient(@clients.length - 1) })
             end
         end
